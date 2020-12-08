@@ -10,4 +10,4 @@ https://www.coursera.org/learn/algorithms-part1
 | Week 2 | Queues | 100/100 |
 | Week 3 | Collinear Points | 100/100 |
 | Week 4 | 8 Puzzle | In-Progress |
-| Week 5 | Kd-Tress | In-Progress | 
+| Week 5 | Kd-Trees | In-Progress | 

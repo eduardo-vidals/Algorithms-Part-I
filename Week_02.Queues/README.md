@@ -7,5 +7,5 @@ A double-ended queue or deque (pronounced “deck”) is a generalization of a s
 ## Randomized Queue
 A randomized queue is similar to a stack or queue, except that the item removed is chosen uniformly at random among items in the data structure.
 
-## Specification.
+## Specification
 Programming assignment specification can be found [here.](https://coursera.cs.princeton.edu/algs4/assignments/queues/specification.php)

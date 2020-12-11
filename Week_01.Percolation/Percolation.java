@@ -73,7 +73,7 @@ public class Percolation {
 
             // BOTTOM
             // All rows get checked, if there is a valid element to the bottom, then it will get connected
-            // isOpen() method will check whether the element ot the right is true or false
+            // isOpen() method will check whether the element to the bottom is true or false
             if (row < length && isOpen(row + 1, col)) {
                 bwQU.union(getIndex(row, col), getIndex(row + 1, col));
                 QU.union(getIndex(row, col), getIndex(row + 1, col));
@@ -97,7 +97,7 @@ public class Percolation {
 
             // TOP
             // All rows get checked, if there is a valid element to the top, then it will get connected
-            // isOpen() method will check whether the element ot the right is true or false
+            // isOpen() method will check whether the element to the top is true or false
             if (row > 1 && isOpen(row - 1, col)) {
                 bwQU.union(getIndex(row, col), getIndex(row - 1, col));
                 QU.union(getIndex(row, col), getIndex(row - 1, col));

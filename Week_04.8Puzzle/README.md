@@ -6,3 +6,6 @@ The 8-puzzle is a sliding puzzle that is played on a 3-by-3 grid with 8 square t
 
 ## The Problem
 Write a program to solve the 8-puzzle problem (and its natural generalizations) using the A* search algorithm.
+
+## Specification
+Specification can be found [here.](https://coursera.cs.princeton.edu/algs4/assignments/8puzzle/specification.php)

@@ -71,7 +71,7 @@ public class Board {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 if (tiles[i][j] != getIndex(i, j) && tiles[i][j] != 0) {
-                    
+
                     int row = (tiles[i][j] / n);
                     int column = tiles[i][j] - (row * n) - 1;
 
@@ -97,7 +97,7 @@ public class Board {
             for (int j = 0; j < n; j++) {
                 goalTiles[i][j] = count;
                 count++;
-                
+
                 // last tile must be 0, so assign it a value of 0
                 if (goalTiles[i][j] == n * n) {
                     goalTiles[i][j] = 0;
@@ -122,7 +122,7 @@ public class Board {
 
         int row = 0;
         int column = 0;
-        
+
         // get the index for the row and column that the blank tile is located on
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
@@ -177,7 +177,42 @@ public class Board {
 
     // a board that is obtained by exchanging any pair of tiles
     public Board twin() {
-        return null;
+        int count = 0;
+
+        int row = 0;
+        int column = 0;
+        int row2 = 0;
+        int column2 = 0;
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+
+                if (count > 1) {
+                    break;
+                }
+
+                if (tiles[i][j] != 0 && count == 1) {
+                    row2 = i;
+                    column2 = j;
+                    count++;
+                }
+
+                if (tiles[i][j] != 0 && count == 0) {
+
+                    row = i;
+                    column = j;
+                    count++;
+                }
+
+            }
+        }
+
+        int[][] tilesCopy = Arrays.stream(tiles).map(int[]::clone).toArray(int[][]::new);
+        swap(tilesCopy, row, column, row2, column2);
+        
+        Board board = new Board(tilesCopy);
+        return board;
+
     }
 
     // returns the respective index of the tile
@@ -213,6 +248,7 @@ public class Board {
         System.out.println("Equals? " + board.equals(board2));
         System.out.println("Main Board: \n" + board3);
         System.out.println("Board Neighbors: \n" + board3.neighbors());
+        System.out.println("Board Twin: \n " + board3.twin());
     }
 
 }

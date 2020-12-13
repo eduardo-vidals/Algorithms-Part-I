@@ -18,12 +18,13 @@ import java.util.Iterator;
 public class Board {
 
     private final int[][] tiles;
-    private final int n = 3;
+    private final int n;
 
     // create a board from an n-by-n array of tiles,
     // where tiles[row][col] = tile at (row, col)
     public Board(int[][] tiles) {
         this.tiles = tiles;
+        n = tiles.length;
     }
 
     // string representation of this board
@@ -134,9 +135,9 @@ public class Board {
         }
 
         // If the row has a swappable element to the bottom, then it gets checked
-        if (row < n) {
+        if (row < n - 1) {
             int[][] tilesCopy = Arrays.stream(tiles).map(int[]::clone).toArray(int[][]::new);
-
+            
             swap(tilesCopy, row, column, row + 1, column);
             Board board = new Board(tilesCopy);
             boardStack.push(board);
@@ -154,7 +155,7 @@ public class Board {
         }
 
         // If the column has a swappable element to the right, then it gets checked
-        if (column < n) {
+        if (column < n - 1) {
             int[][] tilesCopy = Arrays.stream(tiles).map(int[]::clone).toArray(int[][]::new);
 
             swap(tilesCopy, row, column, row, column + 1);
@@ -231,24 +232,12 @@ public class Board {
 
         int[][] tiles = {{8, 1, 3}, {4, 0, 2}, {7, 6, 5}};
         int[][] tiles2 = {{1, 2, 3}, {4, 5, 6}, {7, 8, 0}};
-        int[][] tiles3 = {{8, 1, 3}, {4, 0, 2}, {7, 6, 5}};
-        int[][] tiles4 = {{1, 2, 3}, {4, 5, 6}, {7, 8, 0}};
-        int[][] tiles5 = {{1, 0, 3}, {4, 2, 5}, {7, 8, 6}};
-
+        
         Board board = new Board(tiles);
-        Board board2 = new Board(tiles3);
-        Board board3 = new Board(tiles5);
-        System.out.println("Board: " + board);
-        System.out.println("Board 2: " + board2);
-        System.out.println("Board 3: " + board3);
+        Board board2 = new Board(tiles2);
 
-        System.out.println("Hamming: " + board.hamming());
-        System.out.println("Manhattan Distance: " + board.manhattan());
-        System.out.println("Goal reached? " + board.isGoal());
-        System.out.println("Equals? " + board.equals(board2));
-        System.out.println("Main Board: \n" + board3);
-        System.out.println("Board Neighbors: \n" + board3.neighbors());
-        System.out.println("Board Twin: \n " + board3.twin());
+        System.out.println("Board Neighbors: \n" + board2.neighbors());
+        // System.out.println("Board Twin: \n " + board2.twin());
     }
 
 }

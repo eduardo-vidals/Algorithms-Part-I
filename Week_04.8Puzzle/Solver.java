@@ -63,7 +63,7 @@ public class Solver {
 
     }
 
-    public Board endNode() {
+    private Board endNode() {
         int n = initial.dimension();
         int[][] goalTiles = new int[n][n];
 

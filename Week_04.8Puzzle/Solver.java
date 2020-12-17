@@ -17,11 +17,35 @@ public class Solver {
 
     private MinPQ pq;
 
-    private Board initial;
+    private final Board initial;
+    private final int manhattanDistance;
 
     // find a solution to the initial board (using the A* algorithm)
     public Solver(Board initial) {
+        pq = new MinPQ<>();
         this.initial = initial;
+
+        Iterable<Board> boards = this.initial.neighbors();
+
+        int initialDistance = initial.manhattan();
+
+        Board current = initial;
+        while (initialDistance > 0) {
+            for (Board board : current.neighbors()) {
+                if (current.manhattan() == board.manhattan() - 1) {
+                    pq.insert(board.manhattan());
+                    current = board;
+                }
+            }
+            initialDistance--;
+        }
+
+        if (initialDistance == 0) {
+            manhattanDistance = initial.manhattan();
+        } else {
+            manhattanDistance = -1;
+        }
+
     }
 
     // is the initial board solvable? (see below)
@@ -32,31 +56,42 @@ public class Solver {
     // min number of moves to solve initial board; -1 if unsolvable
     public int moves() {
 
-        Iterable<Board> boards = this.initial.neighbors();
-
-        for (Board board : boards) {
-
-            if (this.initial.manhattan() == 0) {
-                return 0;
-            }
-
-            if (board.manhattan() == this.initial.manhattan() - 1) {
-                return this.initial.manhattan();
-            }
-        }
-
-        return -1;
+        return this.manhattanDistance;
 
     }
 
     // sequence of boards in a shortest solution; null if unsolvable
     public Iterable<Board> solution() {
 
-        if (moves() >= 0) {
+        int initialDistance = initial.manhattan();
+        Board initialBoard = initial;
+        while (initialDistance > 0) {
 
-            Board firstNode = this.initial;
-            Board endNode = this.endNode();
+            Board current = null;
+            for (Board board : initial.neighbors()) {
 
+                if (initialDistance != board.manhattan() - 1) {
+                    return null;
+                } else if (initialDistance == board.manhattan() - 1) {
+                    pq.insert(board);
+                    current = board;
+                }
+                initialDistance--;
+
+            }
+
+            initialBoard = current;
+
+        }
+
+        Board currentNode = this.initial;
+        Board endNode = this.endNode();
+
+        while (!(pq.isEmpty())) {
+
+            if (currentNode.equals(endNode)) {
+
+            }
         }
 
         return null;
@@ -81,27 +116,24 @@ public class Solver {
 
             }
         }
-        
+
         Board board = new Board(goalTiles);
-        
+
         return board;
     }
 
     // test client (see below) 
     public static void main(String[] args) {
-        int[][] tiles = {{8, 1, 3}, {4, 0, 2}, {7, 6, 5}};
+        int[][] tiles = {{0, 1, 3}, {4, 2, 5}, {7, 8, 6}};
         int[][] tiles2 = {{1, 2, 3}, {4, 5, 6}, {7, 8, 0}};
-        int[][] tiles3 = {{8, 1, 3}, {4, 0, 2}, {7, 6, 5}};
-        int[][] tiles4 = {{1, 2, 3}, {4, 5, 6}, {7, 8, 0}};
         int[][] tiles5 = {{1, 0, 3}, {4, 2, 5}, {7, 8, 6}};
 
         Board board = new Board(tiles);
-        Board board2 = new Board(tiles2);
-        Board board3 = new Board(tiles5);
 
         Solver solver = new Solver(board);
 
         System.out.println("Solved in " + solver.moves() + " moves");
+        System.out.println("");
 
     }
 

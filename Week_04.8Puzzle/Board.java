@@ -72,12 +72,19 @@ public class Board {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 if (tiles[i][j] != getIndex(i, j) && tiles[i][j] != 0) {
-
-                    int row = (tiles[i][j] / n);
+                    
+                    // row
+                    int row;
+                    if (tiles[i][j] % n == 0){
+                        row = (tiles[i][j] / n) - 1;
+                    } else {
+                        row = (tiles[i][j] / n);
+                    }
+                    
+                    // column
                     int column = tiles[i][j] - (row * n) - 1;
 
                     int manhattanDistance = Math.abs((i - row) + (j - column));
-
                     total += manhattanDistance;
 
                 }
@@ -231,12 +238,12 @@ public class Board {
     public static void main(String[] args) {
 
         int[][] tiles = {{8, 1, 3}, {4, 0, 2}, {7, 6, 5}};
-        int[][] tiles2 = {{1, 2, 3}, {4, 5, 6}, {7, 8, 0}};
+        int[][] tiles2 = {{0, 1, 3}, {4, 2, 5}, {7, 8, 6}};
         
-        Board board = new Board(tiles);
+        Board board = new Board(tiles2);
         Board board2 = new Board(tiles2);
 
-        System.out.println("Board Neighbors: \n" + board2.neighbors());
+        System.out.println("Manhattan Distance: " + board.manhattan());
         // System.out.println("Board Twin: \n " + board2.twin());
     }
 

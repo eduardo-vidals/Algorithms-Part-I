@@ -5,8 +5,6 @@ package computerscience.algorithms.week4.puzzle;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
-import computerscience.algorithms.week4.puzzle.Board;
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.Stack;
 import edu.princeton.cs.algs4.MinPQ;
@@ -18,29 +16,40 @@ import edu.princeton.cs.algs4.StdOut;
  */
 public class Solver {
 
-    private MinPQ<Node> pq;
-    private MinPQ<Node> pqTwin;
-    private Board initial;
+    private Stack<Board> boardSolution;
+    private boolean isSolvable;
 
     private class Node implements Comparable<Node> {
 
         private Board board;
         private Node prev;
         private int moves;
-        private int priority;
+        private int manhattan;
 
-        public Node(Board board, int moves, Node prev) {
+        public Node(Board board, Node prev) {
             this.board = board;
-            this.moves = moves;
             this.prev = prev;
-            this.priority = moves + board.manhattan();
+            this.manhattan = board.manhattan();
+
+            if (prev != null) {
+                this.moves = prev.moves + 1;
+            } else {
+                this.moves = 0;
+            }
         }
 
         @Override
         public int compareTo(Node that) {
-            return this.priority - that.priority;
-        }
 
+            int priorityDiff = (this.manhattan + this.moves) - (that.manhattan + that.moves);
+
+            if (priorityDiff == 0) {
+                return this.manhattan - that.manhattan;
+            } else {
+                return priorityDiff;
+            }
+
+        }
     }
 
     // find a solution to the initial board (using the A* algorithm)
@@ -49,53 +58,40 @@ public class Solver {
             throw new IllegalArgumentException();
         }
 
-        this.initial = initial;
-        this.pq = new MinPQ<>();
-        this.pqTwin = new MinPQ<>();
+        this.isSolvable = false;
+        this.boardSolution = new Stack<>();
 
-        Node minNode;
-        Node minNodeTwin;
+        MinPQ<Node> pq = new MinPQ<>();
 
-        pq.insert(new Node(initial, 0, null));
-        pqTwin.insert(new Node(initial.twin(), 0, null));
+        pq.insert(new Node(initial, null));
+        pq.insert(new Node(initial.twin(), null));
 
-        while (!(pq.min().board.isGoal()) && !(pqTwin.min().board.isGoal())) {
-
-            minNode = pq.min();
-            pq.delMin();
-
-            minNodeTwin = pqTwin.min();
-            pqTwin.delMin();
-
+        while (!pq.min().board.isGoal()) {
+            Node minNode = pq.delMin();
             for (Board board : minNode.board.neighbors()) {
-                if (minNode.moves == 0) {
-                    pq.insert(new Node(board, minNode.moves + 1, minNode));
-                } else if (!(board.equals(minNode.prev.board))) {
-                    pq.insert(new Node(board, minNode.moves + 1, minNode));
+                if (minNode.prev == null || minNode.prev != null && !minNode.prev.board.equals(board)) {
+                    pq.insert(new Node(board, minNode));
                 }
             }
+        }
 
-            for (Board board : minNodeTwin.board.neighbors()) {
-                if (minNodeTwin.moves == 0) {
-                    pqTwin.insert(new Node(board, minNodeTwin.moves + 1, minNodeTwin));
-                } else if (!(board.equals(minNodeTwin.prev.board))) {
-                    pqTwin.insert(new Node(board, minNodeTwin.moves + 1, minNodeTwin));
-                }
-            }
+        Node current = pq.min();
+        while (current.prev != null) {
+            boardSolution.push(current.board);
+            current = current.prev;
+        }
 
+        boardSolution.push(current.board);
+
+        if (current.board.equals(initial)) {
+            isSolvable = true;
         }
 
     }
 
     // is the initial board solvable? (see below)
     public boolean isSolvable() {
-        if (pq.min().board.isGoal()) {
-            return true;
-        } else if (pqTwin.min().board.isGoal()) {
-            return false;
-        }
-
-        return false;
+        return isSolvable;
     }
 
     // min number of moves to solve initial board; -1 if unsolvable
@@ -103,7 +99,7 @@ public class Solver {
         if (!(isSolvable())) {
             return -1;
         }
-        return pq.min().moves;
+        return this.boardSolution.size() - 1;
     }
 
     // sequence of boards in a shortest solution; null if unsolvable
@@ -113,44 +109,23 @@ public class Solver {
             return null;
         }
 
-        Stack<Board> boardSolution = new Stack<>();
-        Node current = pq.min();
-
-        while (current.prev != null) {
-            boardSolution.push(current.board);
-            current = current.prev;
-        }
-
-        boardSolution.push(initial);
-        return boardSolution;
+        return this.boardSolution;
 
     }
 
     // test client (see below) 
     public static void main(String[] args) {
         // create initial board from file
-        In in = new In(args[0]);
-        int n = in.readInt();
-        int[][] tiles = new int[n][n];
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                tiles[i][j] = in.readInt();
-            }
-        }
-        Board initial = new Board(tiles);
 
-        // solve the puzzle
-        Solver solver = new Solver(initial);
+        int[][] tiles = {{3, 2, 4, 8}, {1, 6, 0, 12}, {5, 10, 7, 11}, {9, 13, 14, 15}};
+        int[][] tiles2 = {{0, 1, 3}, {4, 2, 5}, {7, 8, 6}};
 
-        // print solution to standard output
-        if (!solver.isSolvable()) {
-            StdOut.println("No solution possible");
-        } else {
-            StdOut.println("Minimum number of moves = " + solver.moves());
-            for (Board board : solver.solution()) {
-                StdOut.println(board);
-            }
-        }
+        Board board = new Board(tiles);
+        Board board2 = new Board(tiles2);
+
+        Solver solver = new Solver(board);
+
+        System.out.println("Solvable? " + solver.isSolvable());
 
     }
 

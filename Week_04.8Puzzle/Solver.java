@@ -15,90 +15,118 @@ import java.util.Iterator;
  */
 public class Solver {
 
-    private MinPQ pq;
-
+    private MinPQ<Node> pq;
+    private MinPQ<Node> pqTwin;
     private final Board initial;
-    private final int manhattanDistance;
+    private final Board goal;
+
+    private class Node implements Comparable<Node> {
+
+        private Board board;
+        private Node prev;
+        private int moves;
+        private int priority;
+
+        public Node(Board board, int moves, Node prev) {
+            this.board = board;
+            this.moves = moves;
+            this.prev = prev;
+            this.priority = moves + board.manhattan();
+        }
+
+        @Override
+        public int compareTo(Node that) {
+            return this.priority - that.priority;
+        }
+
+    }
 
     // find a solution to the initial board (using the A* algorithm)
     public Solver(Board initial) {
-        pq = new MinPQ<>();
-        this.initial = initial;
-
-        Iterable<Board> boards = this.initial.neighbors();
-
-        int initialDistance = initial.manhattan();
-
-        Board current = initial;
-        while (initialDistance > 0) {
-            for (Board board : current.neighbors()) {
-                if (current.manhattan() == board.manhattan() - 1) {
-                    pq.insert(board.manhattan());
-                    current = board;
-                }
-            }
-            initialDistance--;
+        if (initial == null) {
+            throw new NullPointerException();
         }
 
-        if (initialDistance == 0) {
-            manhattanDistance = initial.manhattan();
-        } else {
-            manhattanDistance = -1;
+        this.initial = initial;
+        this.pq = new MinPQ<>();
+        this.goal = goalBoard();
+
+        Node minNode;
+        Node minNodeTwin;
+        
+        pq.insert(new Node(initial, 0, null));
+        pqTwin.insert(new Node(initial.twin(), 0, null));
+
+        while (!(pq.min().board.equals(goal)) && !(pqTwin.min().board.equals(goal))) {
+
+            minNode = pq.min();
+            pq.delMin();
+            
+            minNodeTwin = pqTwin.min();
+            pqTwin.delMin();
+
+            for (Board board : minNode.board.neighbors()) {
+                if (minNode.moves == 0) {
+                    pq.insert(new Node(board, minNode.moves + 1, minNode));
+                } else if (!(board.equals(minNode.prev.board))) {
+                    pq.insert(new Node(board, minNode.moves + 1, minNode));
+                }
+            }
+            
+            for (Board board : minNodeTwin.board.neighbors()){
+                if (minNodeTwin.moves == 0){
+                    pqTwin.insert(new Node(board, minNodeTwin.moves + 1, minNodeTwin));
+                } else if (!(board.equals(minNodeTwin.prev.board))){
+                    pqTwin.insert(new Node(board, minNodeTwin.moves + 1, minNodeTwin));
+                }
+            }
+            
         }
 
     }
 
     // is the initial board solvable? (see below)
     public boolean isSolvable() {
-        return moves() >= 0;
+        if (pq.min().board.equals(goal)){
+            return true;
+        } else if (pqTwin.min().board.equals(goal)){
+            return false;
+        }
+        
+        return false;
     }
 
     // min number of moves to solve initial board; -1 if unsolvable
     public int moves() {
-
-        return this.manhattanDistance;
-
+        if (!(isSolvable())){
+            return -1;
+        } else {
+            return pq.min().moves;
+        }
     }
 
     // sequence of boards in a shortest solution; null if unsolvable
     public Iterable<Board> solution() {
 
-        int initialDistance = initial.manhattan();
-        Board initialBoard = initial;
-        while (initialDistance > 0) {
-
-            Board current = null;
-            for (Board board : initial.neighbors()) {
-
-                if (initialDistance != board.manhattan() - 1) {
-                    return null;
-                } else if (initialDistance == board.manhattan() - 1) {
-                    pq.insert(board);
-                    current = board;
-                }
-                initialDistance--;
-
-            }
-
-            initialBoard = current;
-
+        if (!(isSolvable())){
+            return null;
         }
-
-        Board currentNode = this.initial;
-        Board endNode = this.endNode();
-
-        while (!(pq.isEmpty())) {
-
-            if (currentNode.equals(endNode)) {
-
-            }
+        
+        Stack<Board> boardSolution = new Stack<>();
+        Node current = pq.min();
+        
+        while (current.prev != null){
+            boardSolution.push(current.board);
+            current = current.prev;
         }
-
-        return null;
+        
+        boardSolution.push(initial);
+        return boardSolution;
+        
 
     }
 
-    private Board endNode() {
+    private Board goalBoard() {
         int n = initial.dimension();
         int[][] goalTiles = new int[n][n];
 
@@ -108,32 +136,27 @@ public class Solver {
             for (int j = 0; j < n; j++) {
                 goalTiles[i][j] = count;
                 count++;
-
-                // last tile must be 0, so assign it a value of 0
-                if (goalTiles[i][j] == n * n) {
-                    goalTiles[i][j] = 0;
-                }
-
             }
         }
 
-        Board board = new Board(goalTiles);
+        goalTiles[n - 1][n - 1] = 0;
 
-        return board;
+        Board goalBoard = new Board(goalTiles);
+
+        return goalBoard;
     }
 
     // test client (see below) 
     public static void main(String[] args) {
         int[][] tiles = {{0, 1, 3}, {4, 2, 5}, {7, 8, 6}};
-        int[][] tiles2 = {{1, 2, 3}, {4, 5, 6}, {7, 8, 0}};
-        int[][] tiles5 = {{1, 0, 3}, {4, 2, 5}, {7, 8, 6}};
+        int[][] tiles2 = {{1, 2, 3}, {4, 5, 6}, {8, 7, 0}};
 
         Board board = new Board(tiles);
 
         Solver solver = new Solver(board);
 
         System.out.println("Solved in " + solver.moves() + " moves");
-        System.out.println("");
+        System.out.println("Board solution \n" + solver.solution());
 
     }
 

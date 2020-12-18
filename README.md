@@ -9,5 +9,5 @@ https://www.coursera.org/learn/algorithms-part1
 | Week 1 | Percolation | 100/100 |
 | Week 2 | Queues | 100/100 |
 | Week 3 | Collinear Points | 100/100 |
-| Week 4 | 8 Puzzle | In-Progress |
+| Week 4 | 8 Puzzle | 95/100 |
 | Week 5 | Kd-Trees | In-Progress | 

@@ -1,15 +1,13 @@
+package computerscience.algorithms.week4.puzzle;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package computerscience.algorithms.week4.puzzle;
 
-import edu.princeton.cs.algs4.MaxPQ;
-import edu.princeton.cs.algs4.Queue;
 import edu.princeton.cs.algs4.Stack;
 import java.util.Arrays;
-import java.util.Iterator;
 
 /**
  *
@@ -19,12 +17,39 @@ public class Board {
 
     private final int[][] tiles;
     private final int n;
+    private final int manhattanDistance;
 
     // create a board from an n-by-n array of tiles,
     // where tiles[row][col] = tile at (row, col)
     public Board(int[][] tiles) {
         this.tiles = tiles;
         n = tiles.length;
+
+        int total = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (tiles[i][j] != getIndex(i, j) && tiles[i][j] != 0) {
+
+                    // row
+                    int row;
+                    if (tiles[i][j] % n == 0) {
+                        row = (tiles[i][j] / n) - 1;
+                    } else {
+                        row = (tiles[i][j] / n);
+                    }
+
+                    // column
+                    int column = tiles[i][j] - (row * n) - 1;
+
+                    int manhattan = Math.abs((i - row)) + Math.abs((j - column));
+                    total += manhattan;
+
+                }
+            }
+        }
+        
+        this.manhattanDistance = total;
+
     }
 
     // string representation of this board
@@ -68,30 +93,7 @@ public class Board {
 
     // sum of Manhattan distances between tiles and goal
     public int manhattan() {
-        int total = 0;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                if (tiles[i][j] != getIndex(i, j) && tiles[i][j] != 0) {
-                    
-                    // row
-                    int row;
-                    if (tiles[i][j] % n == 0){
-                        row = (tiles[i][j] / n) - 1;
-                    } else {
-                        row = (tiles[i][j] / n);
-                    }
-                    
-                    // column
-                    int column = tiles[i][j] - (row * n) - 1;
-
-                    int manhattanDistance = Math.abs((i - row) + (j - column));
-                    total += manhattanDistance;
-
-                }
-            }
-        }
-
-        return total;
+        return this.manhattanDistance;
     }
 
     // is this board the goal board?
@@ -105,22 +107,28 @@ public class Board {
             for (int j = 0; j < n; j++) {
                 goalTiles[i][j] = count;
                 count++;
-
-                // last tile must be 0, so assign it a value of 0
-                if (goalTiles[i][j] == n * n) {
-                    goalTiles[i][j] = 0;
-                }
-
             }
         }
+
+        goalTiles[n - 1][n - 1] = 0;
 
         return Arrays.deepEquals(tiles, goalTiles);
     }
 
     // does this board equal y?
-    public boolean equals(Object y) {
-        Board other = (Board) y;
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
 
+        Board other = (Board) obj;
         return this.n == other.n && Arrays.deepEquals(tiles, other.tiles);
     }
 
@@ -144,7 +152,7 @@ public class Board {
         // If the row has a swappable element to the bottom, then it gets checked
         if (row < n - 1) {
             int[][] tilesCopy = Arrays.stream(tiles).map(int[]::clone).toArray(int[][]::new);
-            
+
             swap(tilesCopy, row, column, row + 1, column);
             Board board = new Board(tilesCopy);
             boardStack.push(board);
@@ -206,7 +214,6 @@ public class Board {
                 }
 
                 if (tiles[i][j] != 0 && count == 0) {
-
                     row = i;
                     column = j;
                     count++;
@@ -217,7 +224,7 @@ public class Board {
 
         int[][] tilesCopy = Arrays.stream(tiles).map(int[]::clone).toArray(int[][]::new);
         swap(tilesCopy, row, column, row2, column2);
-        
+
         Board board = new Board(tilesCopy);
         return board;
 
@@ -237,11 +244,10 @@ public class Board {
     // unit testing (not graded)
     public static void main(String[] args) {
 
-        int[][] tiles = {{8, 1, 3}, {4, 0, 2}, {7, 6, 5}};
-        int[][] tiles2 = {{0, 1, 3}, {4, 2, 5}, {7, 8, 6}};
-        
-        Board board = new Board(tiles2);
-        Board board2 = new Board(tiles2);
+        int[][] tiles = {{0, 1, 3}, {4, 2, 5}, {7, 8, 6}};
+        int[][] tiles1 = {{1, 0}, {2, 3}};
+
+        Board board = new Board(tiles1);
 
         System.out.println("Manhattan Distance: " + board.manhattan());
         // System.out.println("Board Twin: \n " + board2.twin());

@@ -1,13 +1,16 @@
+package computerscience.algorithms.week4.puzzle;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package computerscience.algorithms.week4.puzzle;
 
-import computerscience.algorithms.datastructures.stacks.Stack;
+import computerscience.algorithms.week4.puzzle.Board;
+import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.Stack;
 import edu.princeton.cs.algs4.MinPQ;
-import java.util.Iterator;
+import edu.princeton.cs.algs4.StdOut;
 
 /**
  *
@@ -17,8 +20,7 @@ public class Solver {
 
     private MinPQ<Node> pq;
     private MinPQ<Node> pqTwin;
-    private final Board initial;
-    private final Board goal;
+    private Board initial;
 
     private class Node implements Comparable<Node> {
 
@@ -44,24 +46,24 @@ public class Solver {
     // find a solution to the initial board (using the A* algorithm)
     public Solver(Board initial) {
         if (initial == null) {
-            throw new NullPointerException();
+            throw new IllegalArgumentException();
         }
 
         this.initial = initial;
         this.pq = new MinPQ<>();
-        this.goal = goalBoard();
+        this.pqTwin = new MinPQ<>();
 
         Node minNode;
         Node minNodeTwin;
-        
+
         pq.insert(new Node(initial, 0, null));
         pqTwin.insert(new Node(initial.twin(), 0, null));
 
-        while (!(pq.min().board.equals(goal)) && !(pqTwin.min().board.equals(goal))) {
+        while (!(pq.min().board.isGoal()) && !(pqTwin.min().board.isGoal())) {
 
             minNode = pq.min();
             pq.delMin();
-            
+
             minNodeTwin = pqTwin.min();
             pqTwin.delMin();
 
@@ -72,91 +74,83 @@ public class Solver {
                     pq.insert(new Node(board, minNode.moves + 1, minNode));
                 }
             }
-            
-            for (Board board : minNodeTwin.board.neighbors()){
-                if (minNodeTwin.moves == 0){
+
+            for (Board board : minNodeTwin.board.neighbors()) {
+                if (minNodeTwin.moves == 0) {
                     pqTwin.insert(new Node(board, minNodeTwin.moves + 1, minNodeTwin));
-                } else if (!(board.equals(minNodeTwin.prev.board))){
+                } else if (!(board.equals(minNodeTwin.prev.board))) {
                     pqTwin.insert(new Node(board, minNodeTwin.moves + 1, minNodeTwin));
                 }
             }
-            
+
         }
 
     }
 
     // is the initial board solvable? (see below)
     public boolean isSolvable() {
-        if (pq.min().board.equals(goal)){
+        if (pq.min().board.isGoal()) {
             return true;
-        } else if (pqTwin.min().board.equals(goal)){
+        } else if (pqTwin.min().board.isGoal()) {
             return false;
         }
-        
+
         return false;
     }
 
     // min number of moves to solve initial board; -1 if unsolvable
     public int moves() {
-        if (!(isSolvable())){
+        if (!(isSolvable())) {
             return -1;
-        } else {
-            return pq.min().moves;
         }
+        return pq.min().moves;
     }
 
     // sequence of boards in a shortest solution; null if unsolvable
     public Iterable<Board> solution() {
 
-        if (!(isSolvable())){
+        if (!(isSolvable())) {
             return null;
         }
-        
+
         Stack<Board> boardSolution = new Stack<>();
         Node current = pq.min();
-        
-        while (current.prev != null){
+
+        while (current.prev != null) {
             boardSolution.push(current.board);
             current = current.prev;
         }
-        
+
         boardSolution.push(initial);
         return boardSolution;
-        
 
-    }
-
-    private Board goalBoard() {
-        int n = initial.dimension();
-        int[][] goalTiles = new int[n][n];
-
-        int count = 1;
-
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                goalTiles[i][j] = count;
-                count++;
-            }
-        }
-
-        goalTiles[n - 1][n - 1] = 0;
-
-        Board goalBoard = new Board(goalTiles);
-
-        return goalBoard;
     }
 
     // test client (see below) 
     public static void main(String[] args) {
-        int[][] tiles = {{0, 1, 3}, {4, 2, 5}, {7, 8, 6}};
-        int[][] tiles2 = {{1, 2, 3}, {4, 5, 6}, {8, 7, 0}};
+        // create initial board from file
+        In in = new In(args[0]);
+        int n = in.readInt();
+        int[][] tiles = new int[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                tiles[i][j] = in.readInt();
+            }
+        }
+        Board initial = new Board(tiles);
 
-        Board board = new Board(tiles);
+        // solve the puzzle
+        Solver solver = new Solver(initial);
 
-        Solver solver = new Solver(board);
-
-        System.out.println("Solved in " + solver.moves() + " moves");
-        System.out.println("Board solution \n" + solver.solution());
+        // print solution to standard output
+        if (!solver.isSolvable()) {
+            StdOut.println("No solution possible");
+        } else {
+            StdOut.println("Minimum number of moves = " + solver.moves());
+            for (Board board : solver.solution()) {
+                StdOut.println(board);
+            }
+        }
 
     }
 

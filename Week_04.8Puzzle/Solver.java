@@ -24,7 +24,7 @@ public class Solver {
         private Board board;
         private Node prev;
         private int moves;
-        private int manhattan;
+        private final int manhattan;
 
         public Node(Board board, Node prev) {
             this.board = board;
@@ -62,19 +62,31 @@ public class Solver {
         this.boardSolution = new Stack<>();
 
         MinPQ<Node> pq = new MinPQ<>();
-
+        
+        // node starts with prev as null
         pq.insert(new Node(initial, null));
         pq.insert(new Node(initial.twin(), null));
-
-        while (!pq.min().board.isGoal()) {
+        
+        // the while loops ends when the min node in the PQ is the goal
+        while (!(pq.min().board.isGoal())) {
+            // we delete the min node each iteration
             Node minNode = pq.delMin();
+            
+            // we iterate through the board neighbors
             for (Board board : minNode.board.neighbors()) {
+                
+                // if we begin, then the prev node should be null
+                // as a result, add the node to the PQ
+                // if we continue, then the prev node should not be null, and
+                // the current board should NOT be equal to the prev node board
+                // as a result, add the node if it follows this criteria
+               
                 if (minNode.prev == null || minNode.prev != null && !minNode.prev.board.equals(board)) {
                     pq.insert(new Node(board, minNode));
                 }
             }
         }
-
+        
         Node current = pq.min();
         while (current.prev != null) {
             boardSolution.push(current.board);
@@ -123,9 +135,10 @@ public class Solver {
         Board board = new Board(tiles);
         Board board2 = new Board(tiles2);
 
-        Solver solver = new Solver(board);
+        Solver solver = new Solver(board2);
 
         System.out.println("Solvable? " + solver.isSolvable());
+        
 
     }
 

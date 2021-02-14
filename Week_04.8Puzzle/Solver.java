@@ -62,39 +62,51 @@ public class Solver {
         this.boardSolution = new Stack<>();
 
         MinPQ<Node> pq = new MinPQ<>();
-        
+
         // node starts with prev as null
         pq.insert(new Node(initial, null));
         pq.insert(new Node(initial.twin(), null));
+
+        // the while loops ends when the min node in the PQ reaches the goal 
+        // or it will end when the twin reaches the goal
+        // the board will be considered unsolvable if the initial board
+        // does NOT reach the goal, but the twin WILL reach the goal if the
+        // board is unsolvable
         
-        // the while loops ends when the min node in the PQ is the goal
         while (!(pq.min().board.isGoal())) {
             // we delete the min node each iteration
             Node minNode = pq.delMin();
-            
+
             // we iterate through the board neighbors
             for (Board board : minNode.board.neighbors()) {
-                
+
                 // if we begin, then the prev node should be null
                 // as a result, add the node to the PQ
                 // if we continue, then the prev node should not be null, and
                 // the current board should NOT be equal to the prev node board
                 // as a result, add the node if it follows this criteria
-               
                 if (minNode.prev == null || minNode.prev != null && !minNode.prev.board.equals(board)) {
                     pq.insert(new Node(board, minNode));
                 }
             }
         }
-        
+
+        // the min node should be the solution of the board
+        // or the solution of the twin board
         Node current = pq.min();
+
+        // loop from the min node till the prev node becomes null and add
+        // the boards to the stack
         while (current.prev != null) {
             boardSolution.push(current.board);
             current = current.prev;
         }
 
+        // add the last board to the stack
         boardSolution.push(current.board);
 
+        // if the current board is equal to the initial board, then the board
+        // is solvable
         if (current.board.equals(initial)) {
             isSolvable = true;
         }
@@ -116,30 +128,19 @@ public class Solver {
 
     // sequence of boards in a shortest solution; null if unsolvable
     public Iterable<Board> solution() {
-
         if (!(isSolvable())) {
             return null;
         }
-
         return this.boardSolution;
-
     }
 
     // test client (see below) 
     public static void main(String[] args) {
-        // create initial board from file
-
-        int[][] tiles = {{3, 2, 4, 8}, {1, 6, 0, 12}, {5, 10, 7, 11}, {9, 13, 14, 15}};
-        int[][] tiles2 = {{0, 1, 3}, {4, 2, 5}, {7, 8, 6}};
-
-        Board board = new Board(tiles);
-        Board board2 = new Board(tiles2);
-
-        Solver solver = new Solver(board2);
-
-        System.out.println("Solvable? " + solver.isSolvable());
+        int[][] tiles = {{0, 1, 3}, {4, 2, 5}, {7, 8, 6}};
         
-
+        Board board = new Board(tiles);
+        Solver solver = new Solver(board);
+        System.out.println("Solvable? " + solver.isSolvable());
     }
 
 }

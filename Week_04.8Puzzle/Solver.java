@@ -5,10 +5,9 @@ package computerscience.algorithms.week4.puzzle;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-import edu.princeton.cs.algs4.In;
+
 import edu.princeton.cs.algs4.Stack;
 import edu.princeton.cs.algs4.MinPQ;
-import edu.princeton.cs.algs4.StdOut;
 
 /**
  *

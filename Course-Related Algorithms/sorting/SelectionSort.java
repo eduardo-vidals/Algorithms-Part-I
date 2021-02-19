@@ -35,27 +35,28 @@ public class SelectionSort {
         System.out.println(Arrays.toString(numbers));
     }
 
-    public static void sort(int[] array) {
-        for (int i = 0; i < array.length; i++) {
+    public static void sort(int[] arr) {
 
-            int min = array[i];
+        for (int i = 0; i < arr.length; i++) {
+            int minValue = arr[i];
             int index = i;
 
-            for (int j = i; j < array.length; j++) {
-
-                if (min > array[j]) {
-                    min = array[j];
+            for (int j = i; j < arr.length; j++) {
+                if (minValue > arr[j]) {
+                    minValue = arr[j];
                     index = j;
                 }
-
+                swap(arr, i, index);
             }
-
-            int temp = array[i];
-            array[i] = array[index];
-            array[index] = temp;
-
         }
 
     }
 
+    public static void swap(int[] arr, int i, int j) {
+
+        int temp = arr[j];
+        arr[j] = arr[i];
+        arr[i] = temp;
+
+    }
 }

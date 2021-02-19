@@ -43,15 +43,14 @@ public class MergeSort {
 
     public static void sort(int[] arr, int l, int r) {
 
-        if (l < r) {
-
-            int m = (l + r) / 2;
-
+        if (l < r){
+            
+            int m = (l + r)/2;
+            
             sort(arr, l, m);
             sort(arr, m + 1, r);
-
             merge(arr, l, m, r);
-
+            
         }
 
     }
@@ -60,11 +59,11 @@ public class MergeSort {
 
         int nL = m - l + 1;
         int nR = r - m;
-
+        
         int L[] = new int[nL];
         int R[] = new int[nR];
-
-        for (int i = 0; i < nL; i++) {
+        
+        for (int i = 0; i < nL; i++){
             L[i] = arr[l + i];
         }
         
@@ -73,34 +72,26 @@ public class MergeSort {
         }
         
         int i = 0; int j = 0;
-        
         int k = l;
-        
+             
         while (i < nL && j < nR){
-            
-            if(L[i] <= R[j]){
-                arr[k] = L[i];
-                i++;
+            if (L[i] <= R[j]){
+                arr[k] = L[i++];
             } else {
-                arr[k] = R[j];
-                j++;
+                arr[k] = R[j++];
             }
             k++;
-            
         }
         
         while (i < nL){
-            arr[k] = L[i];
-            i++;
+            arr[k] = L[i++];
             k++;
         }
         
         while (j < nR){
-            arr[k] = R[j];
-            j++;
+            arr[k] = L[j++];
             k++;
         }
 
     }
-
 }

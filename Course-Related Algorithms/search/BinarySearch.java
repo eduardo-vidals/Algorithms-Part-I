@@ -1,4 +1,4 @@
-/*
+    /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -14,7 +14,6 @@ import java.util.concurrent.TimeUnit;
 public class BinarySearch {
 
     public static void main(String[] args) {
-
         int size = 10000000;
         int[] array = new int[size];
 
@@ -43,10 +42,10 @@ public class BinarySearch {
             
             int m = (l + r)/2;
             
-            if (array[m] == array[searched]){
-                return searched;
-            } else if (array[m] < array[searched]){
-                l = m + 1;
+            if (array[m] == searched){
+                return m;
+            } else if (array[m] < searched){
+                l = m + 1;          
             } else {
                 r = m - 1;
             }

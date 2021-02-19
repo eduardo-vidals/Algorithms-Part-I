@@ -139,7 +139,7 @@ public class Solver {
         
         Board board = new Board(tiles);
         Solver solver = new Solver(board);
-        System.out.println("Solvable? " + solver.isSolvable());
+        System.out.println("Solvable? " + solver.solution());
     }
 
 }

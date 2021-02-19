@@ -5,7 +5,6 @@ package computerscience.algorithms.week3.collinearpoints;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -63,8 +62,7 @@ public class FastCollinearPoints {
                 // there was a line segment from p -> q -> r -> s, then the only
                 // line segment that will be counted is the one with the lower
                 // value at either end of the segment
-                
-                if (validPoints.size() >= 3 && p.compareTo(validPoints.get(0)) < 0)  {
+                if (validPoints.size() >= 3 && p.compareTo(validPoints.get(0)) < 0) {
                     // The first point of the segment
                     Point first = p;
                     // The last point of the segment

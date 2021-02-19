@@ -21,7 +21,6 @@ public class Deque<Item> implements Iterable<Item> {
 
     // define a doubly linked list Node
     private class Node {
-
         private Item data;
         private Node next;
         private Node prev;
@@ -68,7 +67,7 @@ public class Deque<Item> implements Iterable<Item> {
     // add the item to the back
     public void addLast(Item data) {
         if (data == null) {
-            throw new IllegalArgumentException();
+        throw new IllegalArgumentException();
         }
 
         Node oldLast = last;
@@ -159,18 +158,13 @@ public class Deque<Item> implements Iterable<Item> {
     public static void main(String[] args) {
         Deque<Integer> deque = new Deque<>();
 
-        deque.addFirst(4);
-        deque.addFirst(2);
+        deque.addLast(2);
         deque.addLast(5);
-        deque.addFirst(3);
-        StdOut.println("Number removed: " + deque.removeFirst());
-        StdOut.println("Number removed: " + deque.removeLast());
-        for (Integer s : deque) {
-            StdOut.print(s + " ");
+        deque.addLast(8);
+        
+        for (Integer number : deque){
+            System.out.print(number + " ");
         }
-        StdOut.println(" ");
-        StdOut.println("Is the deque empty?: " + deque.isEmpty());
-        StdOut.println("Size: " + deque.size());
 
     }
 

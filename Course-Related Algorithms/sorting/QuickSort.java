@@ -5,15 +5,10 @@
  */
 package computerscience.algorithms.sorting;
 
-import static computerscience.algorithms.sorting.MergeSort.sort;
-import edu.princeton.cs.algs4.StdRandom;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Random;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.lang.Integer;
 import java.text.NumberFormat;
+import java.util.Arrays;
 import java.util.Locale;
 
 /**
@@ -46,44 +41,50 @@ public class QuickSort {
 
     }
 
-    public static int partition(int[] arr, int l, int h){
-        
+    public static int partition(int[] arr, int l, int h) {
+
         int pivot = arr[l];
         int i = l - 1;
         int j = h + 1;
-        
-        while (true){
-            
-            do{
+
+        while (true) {
+
+            do {
                 i++;
             } while (arr[i] < pivot);
-            
-            do{
+
+            do {
                 j--;
             } while (arr[j] > pivot);
-            
-            if (i >= j){
+
+            if (i >= j) {
                 return j;
             }
-            
-            int temp = arr[i];
-            arr[i] = arr[j];
-            arr[j] = temp;
+
+            swap(arr, i, j);
+
         }
-        
+
     }
-    
-    public static void sort(int[] arr, int l, int h){
-        
-        if (l < h){
-            
+
+    public static void sort(int[] arr, int l, int h) {
+
+        if (l < h) {
+
             int j = partition(arr, l, h);
-            
             sort(arr, l, j);
             sort(arr, j + 1, h);
-            
+
         }
-        
+
+    }
+
+    public static void swap(int[] arr, int i, int j) {
+
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+
     }
 
 }

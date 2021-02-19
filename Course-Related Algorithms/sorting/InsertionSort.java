@@ -16,8 +16,7 @@ import java.util.concurrent.TimeUnit;
 public class InsertionSort {
 
     public static void main(String[] args) {
-        
-        
+
         int size = 10000;
         int[] numbers = new int[size];
 
@@ -25,7 +24,7 @@ public class InsertionSort {
         for (int i = 0; i < size - 1; i++) {
             numbers[i] = generator.nextInt(size);
         }
-        
+
         long startTime = System.nanoTime();
         try {
             sort(numbers);
@@ -37,22 +36,22 @@ public class InsertionSort {
         System.out.println(Arrays.toString(numbers));
     }
 
-    public static void sort(int[] array) {
-        for (int i = 1; i < array.length; i ++){
-            
-            int key = array[i];
+    public static void sort(int[] arr) {
+
+        for (int i = 1; i < arr.length; i++) {
+
+            int key = arr[i];
             int j = i - 1;
-            
-            while (j >= 0 && array[j] > key){
-                
-                array[j + 1] = array[j];
+
+            while (j >= 0 && arr[j] > key) {
+                arr[j + 1] = arr[j];
                 j--;
-                
             }
-            
-            array[j + 1] = key;
-            
+
+            arr[j + 1] = key;
+
         }
+
     }
 
 }

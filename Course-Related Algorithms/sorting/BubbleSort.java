@@ -17,14 +17,14 @@ public class BubbleSort {
 
     public static void main(String[] args) {
 
-        int size = 10000;
+        int size = 1000000;
         int[] numbers = new int[size];
 
         Random generator = new Random();
         for (int i = 0; i < size - 1; i++) {
             numbers[i] = generator.nextInt(size);
         }
-        
+
         long startTime = System.nanoTime();
         try {
             sort(numbers);
@@ -37,20 +37,20 @@ public class BubbleSort {
 
     }
 
-    public static void sort(int[] array) {
-        for (int i = 0; i < array.length - 1; i++){
-            
-            for (int j = 0; j < array.length - i - 1; j++){
-                
-                if (array[j] > array[j+1]){
-                    int temp = array[j];
-                    array[j] = array[j + 1];
-                    array[j + 1] = temp;
+    public static void sort(int[] arr) {
+        for (int i = 0; i < arr.length - 1; i++) {
+            for (int j = 0; j < arr.length - 1 - i; j++) {
+                if (arr[j] > arr[j + 1]) {
+                    swap(arr, j, j + 1);
                 }
-                
             }
-            
         }
+    }
+
+    public static void swap(int[] arr, int i, int j) {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
     }
 
 }

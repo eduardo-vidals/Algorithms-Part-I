@@ -250,7 +250,7 @@ public class Board {
         Board board = new Board(tiles1);
 
         System.out.println("Manhattan Distance: " + board.manhattan());
-        // System.out.println("Board Twin: \n " + board2.twin());
+
     }
 
 }

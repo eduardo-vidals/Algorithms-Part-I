@@ -66,7 +66,7 @@ public class Solver {
         pq.insert(new Node(initial, null));
         pq.insert(new Node(initial.twin(), null));
 
-        // the while loops ends when the min node in the PQ reaches the goal 
+        // the while loop ends when the min node in the PQ reaches the goal 
         // or it will end when the twin reaches the goal
         // the board will be considered unsolvable if the initial board
         // does NOT reach the goal, but the twin WILL reach the goal if the

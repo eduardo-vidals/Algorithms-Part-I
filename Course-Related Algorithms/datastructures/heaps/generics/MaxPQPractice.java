@@ -137,7 +137,7 @@ public class MaxPQPractice<Key> implements Iterable<Key> {
     }
     
     private boolean isMaxHeap(){
-        for (int i = 0; i < n; i++){
+        for (int i = 1; i <= n; i++){
             if (pq[i] == null){
                 return false;
             }
@@ -177,7 +177,28 @@ public class MaxPQPractice<Key> implements Iterable<Key> {
 
     @Override
     public Iterator<Key> iterator() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return new HeapIterator();
+    }
+    
+    private class HeapIterator implements Iterator<Key> {
+        
+        
+        public HeapIterator(){
+            if (comparator == null){
+                
+            }
+        }
+
+        @Override
+        public boolean hasNext() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public Key next() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+        
     }
 
     public static void main(String[] args) {

@@ -142,7 +142,7 @@ public class MaxPQ<Key> implements Iterable<Key> {
             }
         }
 
-        for (int i = n + 1; i <= pq.length; i++) {
+        for (int i = n + 1; i < pq.length; i++) {
             if (pq[i] != null) {
                 return false;
             }

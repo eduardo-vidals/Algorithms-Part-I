@@ -20,23 +20,6 @@ public class MinHeap {
     public MinHeap() {
         n = 0;
         heap = new int[INIT_CAPACITY];
-        heap[0] = Integer.MIN_VALUE;
-    }
-
-    private int parent(int pos) {
-        return (pos / 2);
-    }
-
-    private int leftChild(int pos) {
-        return (pos * 2);
-    }
-
-    private int rightChild(int pos) {
-        return (pos * 2) + 1;
-    }
-
-    private boolean isLeaf(int pos) {
-        return pos >= (n / 2) && pos <= n;
     }
 
     private void resize(int size) {
@@ -46,76 +29,61 @@ public class MinHeap {
             copy[i] = heap[i];
         }
 
-        copy[0] = Integer.MIN_VALUE;
         heap = copy;
     }
-
-    private void swap(int[] arr, int i, int j) {
-        int temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
-    }
-
-    private void minHeapify(int pos) {
-        if (isLeaf(pos)) {
-            return;
-        }
-
-        if (heap[pos] > heap[leftChild(pos)] || heap[pos] > heap[rightChild(pos)]) {
-
-            if (heap[leftChild(pos)] < heap[rightChild(pos)]) {
-                swap(heap, pos, leftChild(pos));
-                minHeapify(leftChild(pos));
-            } else {
-                swap(heap, pos, rightChild(pos));
-                minHeapify(rightChild(pos));
-            }
-
-        }
-
-    }
-
+    
     public int size() {
         return n;
     }
 
     public void insert(int element) {
-
         if (n == heap.length - 1) {
             resize(2 * heap.length);
         }
-
         heap[++n] = element;
-        int current = n;
-
-        while (heap[current] < heap[parent(current)]) {
-            swap(heap, current, parent(current));
-            current = parent(current);
-        }
-
+        swim(n);
     }
 
     public int extractMin() {
         int min = heap[1];
-        heap[1] = heap[n];
-        heap[n] = 0;
-        minHeapify(1);
-        n--;
+        exch(1, n--);
+        heap[n + 1] = 0;
+        sink(1);
 
+        if ((n > 0) && (n == (heap.length - 1) / 4)) {
+            resize(heap.length / 2);
+        }
         return min;
     }
 
-    @Override
-    public String toString() {
+    private void exch(int i, int j) {
+        int temp = heap[i];
+        heap[i] = heap[j];
+        heap[j] = temp;
+    }
 
-        StringBuilder sb = new StringBuilder();
-
-        for (int i = 1; i <= n; i++) {
-            sb.append(heap[i]).append(" ");
+    private void swim(int k) {
+        while (k > 1 && heap[k / 2] > heap[k]) {
+            exch(k, k / 2);
+            k = k / 2;
         }
+    }
 
-        return sb.toString();
+    private void sink(int k) {
+        while (2 * k <= n) {
+            int j = 2 * k;
 
+            if (j < n && heap[j] > heap[j + 1]) {
+                j++;
+            }
+
+            if (!(heap[k] > heap[j])) {
+                break;
+            }
+
+            exch(k, j);
+            k = j;
+        }
     }
 
     public static void main(String[] args) {
@@ -137,7 +105,6 @@ public class MinHeap {
         }
 
         System.out.println(Arrays.toString(arr));
-        System.out.println(heap);
     }
 
 }

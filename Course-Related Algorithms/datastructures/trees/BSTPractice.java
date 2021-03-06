@@ -6,6 +6,7 @@
 package computerscience.algorithms.datastructures.trees;
 
 import edu.princeton.cs.algs4.Queue;
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
@@ -31,10 +32,6 @@ public class BSTPractice<Key extends Comparable<Key>, Value> {
             this.val = val;
             this.size = size;
         }
-    }
-
-    public BSTPractice() {
-
     }
 
     public boolean isEmpty() {
@@ -64,7 +61,7 @@ public class BSTPractice<Key extends Comparable<Key>, Value> {
         return get(root, key);
     }
 
-    public Value get(Node x, Key key) {
+    private Value get(Node x, Key key) {
         if (key == null) {
             throw new IllegalArgumentException("calls get() with a null key");
         }
@@ -72,9 +69,7 @@ public class BSTPractice<Key extends Comparable<Key>, Value> {
         if (x == null) {
             return null;
         }
-
         int cmp = key.compareTo(x.key);
-
         if (cmp < 0) {
             return get(x.left, key);
         } else if (cmp > 0) {
@@ -88,7 +83,6 @@ public class BSTPractice<Key extends Comparable<Key>, Value> {
         if (key == null) {
             throw new IllegalArgumentException("calls put() with a null key");
         }
-
         if (val == null) {
             //delete(key);
             return;
@@ -97,12 +91,13 @@ public class BSTPractice<Key extends Comparable<Key>, Value> {
         root = put(root, key, val);
     }
 
-    private Node put(Node x, Key key, Value val) {
+    public Node put(Node x, Key key, Value val) {
         if (x == null) {
             return new Node(key, val, 1);
         }
 
         int cmp = key.compareTo(x.key);
+
         if (cmp < 0) {
             x.left = put(x.left, key, val);
         } else if (cmp > 0) {
@@ -111,7 +106,7 @@ public class BSTPractice<Key extends Comparable<Key>, Value> {
             x.val = val;
         }
 
-        x.size = 1 + size(x.left) + size(x.right);
+        x.size = size(x.left) + size(x.right) + 1;
         return x;
     }
 
@@ -127,6 +122,7 @@ public class BSTPractice<Key extends Comparable<Key>, Value> {
         if (x.left == null) {
             return x.right;
         }
+
         x.left = deleteMin(x.left);
         x.size = size(x.left) + size(x.right) + 1;
         return x;
@@ -145,7 +141,7 @@ public class BSTPractice<Key extends Comparable<Key>, Value> {
             return x.left;
         }
 
-        x.right = deleteMax(x.right);
+        x.right = deleteMin(x.right);
         x.size = size(x.left) + size(x.right) + 1;
         return x;
     }
@@ -160,7 +156,7 @@ public class BSTPractice<Key extends Comparable<Key>, Value> {
 
     private Node delete(Node x, Key key) {
         if (x == null) {
-            throw new NoSuchElementException("calls min() with empty symbol table");
+            return null;
         }
 
         int cmp = key.compareTo(x.key);
@@ -235,12 +231,13 @@ public class BSTPractice<Key extends Comparable<Key>, Value> {
             return null;
         }
         int cmp = key.compareTo(x.key);
+
         if (cmp == 0) {
             return x;
+        } else if (cmp < 0) {
+            x.right = floor(x.right, key);
         }
-        if (cmp < 0) {
-            return floor(x.left, key);
-        }
+
         Node t = floor(x.right, key);
         if (t != null) {
             return t;
@@ -251,11 +248,13 @@ public class BSTPractice<Key extends Comparable<Key>, Value> {
 
     public Key ceiling(Key key) {
         if (key == null) {
-            throw new IllegalArgumentException("argument to floor is null");
+            throw new IllegalArgumentException("argument to floor() is null");
         }
+
         if (isEmpty()) {
             throw new NoSuchElementException("calls ceiling() with empty symbol table");
         }
+
         Node x = ceiling(root, key);
         if (x == null) {
             throw new NoSuchElementException("argument to ceiling() is too large");
@@ -268,7 +267,9 @@ public class BSTPractice<Key extends Comparable<Key>, Value> {
         if (x == null) {
             return null;
         }
+
         int cmp = key.compareTo(x.key);
+
         if (cmp == 0) {
             return x;
         }
@@ -280,12 +281,13 @@ public class BSTPractice<Key extends Comparable<Key>, Value> {
                 return x;
             }
         }
+
         return ceiling(x.right, key);
     }
 
     public Key select(int rank) {
         if (rank < 0 || rank >= size()) {
-            throw new IllegalArgumentException("argument ot select() is invalid: " + rank);
+            throw new IllegalArgumentException("argument of selection() is invalid:" + rank);
         }
         return select(root, rank);
     }
@@ -308,25 +310,26 @@ public class BSTPractice<Key extends Comparable<Key>, Value> {
         if (key == null) {
             throw new IllegalArgumentException("argument to rank() is null");
         }
-        return rank(key, root);
+        return rank(root, key);
     }
 
-    private int rank(Key key, Node x) {
+    private int rank(Node x, Key key) {
         if (x == null) {
             return 0;
         }
+
         int cmp = key.compareTo(x.key);
         if (cmp < 0) {
-            return rank(key, x.left);
+            return rank(x.left, key);
         } else if (cmp > 0) {
-            return 1 + size(x.left) + rank(key, x.right);
+            return size(x.left) + rank(x.right, key) + 1;
         } else {
             return size(x.left);
         }
     }
-    
-    public Iterable<Key> keys(){
-        if (isEmpty()){
+
+    public Iterable<Key> keys() {
+        if (isEmpty()) {
             return new Queue<>();
         }
         return keys(min(), max());
@@ -334,10 +337,10 @@ public class BSTPractice<Key extends Comparable<Key>, Value> {
 
     public Iterable<Key> keys(Key lo, Key hi) {
         if (lo == null) {
-            throw new IllegalArgumentException("first argument to keys() is null");
+            throw new IllegalArgumentException("first argument to keys is null");
         }
         if (hi == null) {
-            throw new IllegalArgumentException("second argument to keys() is null");
+            throw new IllegalArgumentException("first argument to keys is null");
         }
 
         Queue<Key> queue = new Queue<>();
@@ -349,7 +352,6 @@ public class BSTPractice<Key extends Comparable<Key>, Value> {
         if (x == null) {
             return;
         }
-
         int cmplo = lo.compareTo(x.key);
         int cmphi = hi.compareTo(x.key);
         if (cmplo < 0) {
@@ -358,7 +360,6 @@ public class BSTPractice<Key extends Comparable<Key>, Value> {
         if (cmplo <= 0 && cmphi >= 0) {
             queue.enqueue(x.key);
         }
-
         if (cmphi > 0) {
             keys(x.right, queue, lo, hi);
         }
@@ -368,12 +369,15 @@ public class BSTPractice<Key extends Comparable<Key>, Value> {
         if (lo == null) {
             throw new IllegalArgumentException("first argument to size() is null");
         }
+
         if (hi == null) {
             throw new IllegalArgumentException("second argument to size() is null");
         }
+
         if (lo.compareTo(hi) > 0) {
             return 0;
         }
+
         if (contains(hi)) {
             return rank(hi) - rank(lo) + 1;
         } else {
@@ -392,23 +396,29 @@ public class BSTPractice<Key extends Comparable<Key>, Value> {
 
         return 1 + Math.max(height(x.left), height(x.right));
     }
-    
-    public Iterable<Key> levelOrder(){
+
+    public Iterable<Key> levelOrder() {
         Queue<Key> keys = new Queue<>();
         Queue<Node> queue = new Queue<>();
         queue.enqueue(root);
-        while(!queue.isEmpty()){
+        while (!queue.isEmpty()) {
             Node x = queue.dequeue();
-            if(x == null){
+            if (x == null) {
                 continue;
             }
             keys.enqueue(x.key);
             queue.enqueue(x.left);
             queue.enqueue(x.right);
         }
+
         return keys;
     }
-    
+
+    /**
+     * ***********************************************************************
+     * Check integrity of BST data structure.
+     * *************************************************************************
+     */
     private boolean check() {
         if (!isBST()) {
             System.out.println("Not in symmetric order");
@@ -472,6 +482,10 @@ public class BSTPractice<Key extends Comparable<Key>, Value> {
             }
         }
         return true;
+    }
+
+    public static void main(String[] args) {
+       
     }
 
 }

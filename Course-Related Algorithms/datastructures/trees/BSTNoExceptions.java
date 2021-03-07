@@ -14,7 +14,7 @@ import java.util.NoSuchElementException;
  * @param <Key>
  * @param <Value>
  */
-public class BST<Key extends Comparable<Key>, Value> {
+public class BSTNoExceptions<Key extends Comparable<Key>, Value> {
 
     private Node root;
 
@@ -50,9 +50,6 @@ public class BST<Key extends Comparable<Key>, Value> {
     }
 
     public boolean contains(Key key) {
-        if (key == null) {
-            throw new IllegalArgumentException("argument to contains() is null");
-        }
         return get(key) != null;
     }
 
@@ -61,10 +58,6 @@ public class BST<Key extends Comparable<Key>, Value> {
     }
 
     private Value get(Node x, Key key) {
-        if (key == null) {
-            throw new IllegalArgumentException("calls get() with a null key");
-        }
-
         if (x == null) {
             return null;
         }
@@ -79,16 +72,7 @@ public class BST<Key extends Comparable<Key>, Value> {
     }
 
     public void put(Key key, Value val) {
-        if (key == null) {
-            throw new IllegalArgumentException("calls put() with a null key");
-        }
-        if (val == null) {
-            delete(key);
-            return;
-        }
-
         root = put(root, key, val);
-        assert check();
     }
 
     private Node put(Node x, Key key, Value val) {
@@ -111,12 +95,7 @@ public class BST<Key extends Comparable<Key>, Value> {
     }
 
     public void deleteMin() {
-        if (isEmpty()) {
-            throw new NoSuchElementException("Symbol table underflow");
-        }
-
         root = deleteMin(root);
-        assert check();
     }
 
     private Node deleteMin(Node x) {
@@ -130,12 +109,7 @@ public class BST<Key extends Comparable<Key>, Value> {
     }
 
     public void deleteMax() {
-        if (isEmpty()) {
-            throw new NoSuchElementException("Symbol table underflow");
-        }
-
         root = deleteMax(root);
-        assert check();
     }
 
     private Node deleteMax(Node x) {
@@ -143,51 +117,41 @@ public class BST<Key extends Comparable<Key>, Value> {
             return x.left;
         }
 
-        x.right = deleteMin(x.right);
+        x.right = deleteMax(x.right);
         x.size = size(x.left) + size(x.right) + 1;
         return x;
     }
 
     public void delete(Key key) {
-        if (key == null) {
-            throw new IllegalArgumentException("calls delete() with a null key");
-        }
-
         root = delete(root, key);
-        assert check();
     }
 
     private Node delete(Node x, Key key) {
-        if (x == null) {
-            return null;
-        }
-
         int cmp = key.compareTo(x.key);
-
         if (cmp < 0) {
-            x.left = delete(x.left, key);
+            return x.left = delete(x.left, key);
         } else if (cmp > 0) {
-            x.right = delete(x.right, key);
+            return x.right = delete(x.right, key);
         } else {
             if (x.right == null) {
                 return x.left;
             }
+
             if (x.left == null) {
                 return x.right;
             }
+
             Node t = x;
             x = min(t.right);
             x.right = deleteMin(t.right);
             x.left = t.left;
         }
+
         x.size = size(x.left) + size(x.right) + 1;
         return x;
     }
 
     public Key min() {
-        if (isEmpty()) {
-            throw new NoSuchElementException("calls min() with empty symbol table");
-        }
         return min(root).key;
     }
 
@@ -200,9 +164,6 @@ public class BST<Key extends Comparable<Key>, Value> {
     }
 
     public Key max() {
-        if (isEmpty()) {
-            throw new NoSuchElementException("calls max() with empty symbol table");
-        }
         return max(root).key;
     }
 
@@ -215,12 +176,6 @@ public class BST<Key extends Comparable<Key>, Value> {
     }
 
     public Key floor(Key key) {
-        if (key == null) {
-            throw new IllegalArgumentException("argument to floor is null");
-        }
-        if (isEmpty()) {
-            throw new NoSuchElementException("calls floor() with empty symbol table");
-        }
         Node x = floor(root, key);
         if (x == null) {
             throw new NoSuchElementException("argument to floor is too small");
@@ -233,11 +188,14 @@ public class BST<Key extends Comparable<Key>, Value> {
         if (x == null) {
             return null;
         }
+
         int cmp = key.compareTo(x.key);
 
         if (cmp == 0) {
             return x;
-        } else if (cmp < 0) {
+        } 
+        
+        if (cmp < 0) {
             return floor(x.left, key);
         }
 
@@ -250,14 +208,6 @@ public class BST<Key extends Comparable<Key>, Value> {
     }
 
     public Key ceiling(Key key) {
-        if (key == null) {
-            throw new IllegalArgumentException("argument to floor() is null");
-        }
-
-        if (isEmpty()) {
-            throw new NoSuchElementException("calls ceiling() with empty symbol table");
-        }
-
         Node x = ceiling(root, key);
         if (x == null) {
             throw new NoSuchElementException("argument to ceiling() is too large");
@@ -276,147 +226,134 @@ public class BST<Key extends Comparable<Key>, Value> {
         if (cmp == 0) {
             return x;
         }
-        if (cmp < 0) {
+        
+        if (cmp < 0){
             Node t = ceiling(x.left, key);
-            if (t != null) {
+            if (t != null){
                 return t;
             } else {
                 return x;
             }
         }
-
+        
         return ceiling(x.right, key);
+        
     }
-
-    public Key select(int rank) {
-        if (rank < 0 || rank >= size()) {
-            throw new IllegalArgumentException("argument of select() is invalid:" + rank);
-        }
+    
+    public Key select(int rank){
         return select(root, rank);
     }
-
-    private Key select(Node x, int rank) {
-        if (x == null) {
+    
+    private Key select(Node x, int rank){
+        if (x == null){
             return null;
         }
+        
         int leftSize = size(x.left);
-        if (leftSize > rank) {
+        
+        if (leftSize > rank){
             return select(x.left, rank);
-        } else if (leftSize < rank) {
+        } else if (leftSize < rank){
             return select(x.right, rank - leftSize - 1);
         } else {
             return x.key;
         }
     }
-
-    public int rank(Key key) {
-        if (key == null) {
-            throw new IllegalArgumentException("argument to rank() is null");
-        }
+    
+    public int rank(Key key){
         return rank(root, key);
     }
-
-    private int rank(Node x, Key key) {
-        if (x == null) {
+    
+    private int rank(Node x, Key key){
+        if (x == null){
             return 0;
         }
-
+        
         int cmp = key.compareTo(x.key);
-        if (cmp < 0) {
+        
+        if (cmp < 0){
             return rank(x.left, key);
-        } else if (cmp > 0) {
+        } else if(cmp > 0){
             return size(x.left) + rank(x.right, key) + 1;
         } else {
             return size(x.left);
         }
     }
-
-    public Iterable<Key> keys() {
-        if (isEmpty()) {
+    
+    public Iterable<Key> keys(){
+        if (isEmpty()){
             return new Queue<>();
         }
         return keys(min(), max());
     }
-
-    public Iterable<Key> keys(Key lo, Key hi) {
-        if (lo == null) {
-            throw new IllegalArgumentException("first argument to keys is null");
-        }
-        if (hi == null) {
-            throw new IllegalArgumentException("first argument to keys is null");
-        }
-
+    
+    public Iterable<Key> keys(Key lo, Key hi){
         Queue<Key> queue = new Queue<>();
         keys(root, queue, lo, hi);
         return queue;
     }
-
-    private void keys(Node x, Queue<Key> queue, Key lo, Key hi) {
-        if (x == null) {
+    
+    private void keys(Node x, Queue<Key> queue, Key lo, Key hi){
+        if (x == null){
             return;
         }
         int cmplo = lo.compareTo(x.key);
         int cmphi = hi.compareTo(x.key);
-        if (cmplo < 0) {
+        
+        if (cmplo < 0){
             keys(x.left, queue, lo, hi);
         }
-        if (cmplo <= 0 && cmphi >= 0) {
+        
+        if (cmplo <= 0 && cmphi >= 0){
             queue.enqueue(x.key);
         }
-        if (cmphi > 0) {
+        
+        if (cmphi > 0){
             keys(x.right, queue, lo, hi);
         }
     }
-
-    public int size(Key lo, Key hi) {
-        if (lo == null) {
-            throw new IllegalArgumentException("first argument to size() is null");
-        }
-
-        if (hi == null) {
-            throw new IllegalArgumentException("second argument to size() is null");
-        }
-
-        if (lo.compareTo(hi) > 0) {
+    
+    public int size(Key lo, Key hi){
+        if (lo.compareTo(hi) > 0){
             return 0;
         }
-
-        if (contains(hi)) {
+        
+        if (contains(hi)){
             return rank(hi) - rank(lo) + 1;
         } else {
             return rank(hi) - rank(lo);
         }
     }
-
-    public int height() {
+    
+    public int height(){
         return height(root);
     }
-
-    private int height(Node x) {
-        if (x == null) {
+    
+    private int height(Node x){
+        if (x == null){
             return -1;
         }
-
+        
         return 1 + Math.max(height(x.left), height(x.right));
     }
-
-    public Iterable<Key> levelOrder() {
+    
+    public Iterable<Key> levelOrder(){
         Queue<Key> keys = new Queue<>();
         Queue<Node> queue = new Queue<>();
         queue.enqueue(root);
-        while (!queue.isEmpty()) {
+        while(!queue.isEmpty()){
             Node x = queue.dequeue();
-            if (x == null) {
-                continue;
+            if (x == null){
+                continue; 
             }
             keys.enqueue(x.key);
             queue.enqueue(x.left);
             queue.enqueue(x.right);
         }
-
+        
         return keys;
     }
-
+    
     /**
      * ***********************************************************************
      * Check integrity of BST data structure.
@@ -487,7 +424,7 @@ public class BST<Key extends Comparable<Key>, Value> {
         return true;
     }
 
-    public static void main(String[] args) {
+     public static void main(String[] args) {
         BSTPractice<String, Integer> bst = new BSTPractice<>();
         System.out.println(bst.isEmpty()); // true
         bst.put("S", 1);

@@ -6,7 +6,6 @@
 package computerscience.algorithms.datastructures.trees;
 
 import edu.princeton.cs.algs4.Queue;
-import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
@@ -235,7 +234,7 @@ public class BSTPractice<Key extends Comparable<Key>, Value> {
         if (cmp == 0) {
             return x;
         } else if (cmp < 0) {
-            x.right = floor(x.right, key);
+            return floor(x.left, key);
         }
 
         Node t = floor(x.right, key);
@@ -485,7 +484,35 @@ public class BSTPractice<Key extends Comparable<Key>, Value> {
     }
 
     public static void main(String[] args) {
-       
+        BSTPractice<String, Integer> bst = new BSTPractice<>();
+        System.out.println(bst.isEmpty()); // true
+        bst.put("S", 1);
+        bst.put("E", 2);
+        bst.put("X", 3);
+        bst.put("A", 4);
+        bst.put("R", 5);
+        bst.put("C", 6);
+        bst.put("H", 7);
+        bst.put("M", 8);
+        System.out.println(bst.height()); // 4
+        bst.delete("M");
+        System.out.println(bst.floor("G")); // E
+        System.out.println(bst.ceiling("G")); // H
+        System.out.println(bst.height()); // 3
+        System.out.println(bst.levelOrder()); // S E X A R C H [M] <-- deleted
+        System.out.println(bst.keys()); // A C E H R S X
+        System.out.println(bst.select(3)); // H
+        System.out.println(bst.size()); // 7
+        System.out.println(bst.rank("F")); // 3
+        System.out.println(bst.contains("E")); // true
+        System.out.println(bst.contains("F")); // false
+        System.out.println(bst.get("X")); // 3
+        System.out.println("Min: " + bst.min() + " Max: " + bst.max()); // A | X
+        bst.deleteMin();
+        System.out.println(bst.keys()); // C E H R S X
+        bst.deleteMax();
+        System.out.println(bst.keys()); // C E H R S
+        System.out.println("Min: " + bst.min() + " Max: " + bst.max()); // C | S
     }
 
 }

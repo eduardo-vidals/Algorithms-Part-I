@@ -12,5 +12,3 @@ In a famous scientific problem, researchers are interested in the following ques
 
 ## Specification.
 Programming assignment specification can be found [here.](https://coursera.cs.princeton.edu/algs4/assignments/percolation/specification.php)
-
-

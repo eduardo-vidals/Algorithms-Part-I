@@ -1,2 +1,2 @@
 # Heaps
-Includes a generic and non-generic implementation of heaps. 
+Includes a generic and non-generic implementation of heaps.

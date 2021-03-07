@@ -1,5 +1,5 @@
 # Course-Related Algorithms
-Includes the implementations of data structures, sorting, and searching algorithms.
+Includes the implementations of the following: data structures, searching algorithms, and sorting algorithms. 
 ⠀Content⠀                | Content Covered |
 ------------------------- | ------------------- |
  Data Structures | <ul><li>Heaps</li><li>Linked List</li><li>Queues</li><li>Stacks</li><li>Trees</li></ul>

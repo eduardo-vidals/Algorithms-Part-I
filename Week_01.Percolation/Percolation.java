@@ -53,7 +53,6 @@ public class Percolation {
         bottom = n * n + 1;
         length = n;
     }
-
     // opens the site (row, col) if it is not open already
     public void open(int row, int col) {
 
@@ -131,7 +130,7 @@ public class Percolation {
         return bwQU.find(getIndex(row, col)) == bwQU.find(top);
 
     }
-
+    
     // returns the number of open sites
     public int numberOfOpenSites() {
         return numberOfSites;

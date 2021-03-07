@@ -1,4 +1,4 @@
-# Algorithms Part I by Princeton University
+# Algorithms Part I by Princeton Universitye
  
 Part I of Algorithms from Princeton University. Part I covers elementary data structures, sorting, and searching algorithms. Course related information can be found here:
 

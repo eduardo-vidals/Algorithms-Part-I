@@ -5,8 +5,6 @@ package computerscience.algorithms.sorting.generics;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
-
 import java.util.Arrays;
 
 /**
@@ -69,7 +67,6 @@ public class GenericMergeSort {
         String[] arrayString = {"Jason", "Bob", "Aaron", "Mary", "Jessica", "Eduardo", "Sharon", "Dominik", "Carlos"};
         GenericMergeSort.sort(arrayString, 0, arrayString.length - 1);
         System.out.println(Arrays.toString(arrayString));
-
     }
 
 }

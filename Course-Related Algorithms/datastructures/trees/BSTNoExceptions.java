@@ -73,6 +73,7 @@ public class BSTNoExceptions<Key extends Comparable<Key>, Value> {
 
     public void put(Key key, Value val) {
         root = put(root, key, val);
+        assert check();
     }
 
     private Node put(Node x, Key key, Value val) {
@@ -127,11 +128,15 @@ public class BSTNoExceptions<Key extends Comparable<Key>, Value> {
     }
 
     private Node delete(Node x, Key key) {
+        if (x == null) {
+            return null;
+        }
+
         int cmp = key.compareTo(x.key);
         if (cmp < 0) {
-            return x.left = delete(x.left, key);
+            x.left = delete(x.left, key);
         } else if (cmp > 0) {
-            return x.right = delete(x.right, key);
+            x.right = delete(x.right, key);
         } else {
             if (x.right == null) {
                 return x.left;
@@ -176,6 +181,12 @@ public class BSTNoExceptions<Key extends Comparable<Key>, Value> {
     }
 
     public Key floor(Key key) {
+        if (key == null) {
+            throw new IllegalArgumentException("argument to floor is null");
+        }
+        if (isEmpty()) {
+            throw new NoSuchElementException("calls floor() with empty symbol table");
+        }
         Node x = floor(root, key);
         if (x == null) {
             throw new NoSuchElementException("argument to floor is too small");
@@ -193,8 +204,8 @@ public class BSTNoExceptions<Key extends Comparable<Key>, Value> {
 
         if (cmp == 0) {
             return x;
-        } 
-        
+        }
+
         if (cmp < 0) {
             return floor(x.left, key);
         }
@@ -226,134 +237,134 @@ public class BSTNoExceptions<Key extends Comparable<Key>, Value> {
         if (cmp == 0) {
             return x;
         }
-        
-        if (cmp < 0){
+
+        if (cmp < 0) {
             Node t = ceiling(x.left, key);
-            if (t != null){
+            if (t != null) {
                 return t;
             } else {
                 return x;
             }
         }
-        
+
         return ceiling(x.right, key);
-        
+
     }
-    
-    public Key select(int rank){
+
+    public Key select(int rank) {
         return select(root, rank);
     }
-    
-    private Key select(Node x, int rank){
-        if (x == null){
+
+    private Key select(Node x, int rank) {
+        if (x == null) {
             return null;
         }
-        
+
         int leftSize = size(x.left);
-        
-        if (leftSize > rank){
+
+        if (leftSize > rank) {
             return select(x.left, rank);
-        } else if (leftSize < rank){
+        } else if (leftSize < rank) {
             return select(x.right, rank - leftSize - 1);
         } else {
             return x.key;
         }
     }
-    
-    public int rank(Key key){
+
+    public int rank(Key key) {
         return rank(root, key);
     }
-    
-    private int rank(Node x, Key key){
-        if (x == null){
+
+    private int rank(Node x, Key key) {
+        if (x == null) {
             return 0;
         }
-        
+
         int cmp = key.compareTo(x.key);
-        
-        if (cmp < 0){
+
+        if (cmp < 0) {
             return rank(x.left, key);
-        } else if(cmp > 0){
+        } else if (cmp > 0) {
             return size(x.left) + rank(x.right, key) + 1;
         } else {
             return size(x.left);
         }
     }
-    
-    public Iterable<Key> keys(){
-        if (isEmpty()){
+
+    public Iterable<Key> keys() {
+        if (isEmpty()) {
             return new Queue<>();
         }
         return keys(min(), max());
     }
-    
-    public Iterable<Key> keys(Key lo, Key hi){
+
+    public Iterable<Key> keys(Key lo, Key hi) {
         Queue<Key> queue = new Queue<>();
         keys(root, queue, lo, hi);
         return queue;
     }
-    
-    private void keys(Node x, Queue<Key> queue, Key lo, Key hi){
-        if (x == null){
+
+    private void keys(Node x, Queue<Key> queue, Key lo, Key hi) {
+        if (x == null) {
             return;
         }
         int cmplo = lo.compareTo(x.key);
         int cmphi = hi.compareTo(x.key);
-        
-        if (cmplo < 0){
+
+        if (cmplo < 0) {
             keys(x.left, queue, lo, hi);
         }
-        
-        if (cmplo <= 0 && cmphi >= 0){
+
+        if (cmplo <= 0 && cmphi >= 0) {
             queue.enqueue(x.key);
         }
-        
-        if (cmphi > 0){
+
+        if (cmphi > 0) {
             keys(x.right, queue, lo, hi);
         }
     }
-    
-    public int size(Key lo, Key hi){
-        if (lo.compareTo(hi) > 0){
+
+    public int size(Key lo, Key hi) {
+        if (lo.compareTo(hi) > 0) {
             return 0;
         }
-        
-        if (contains(hi)){
+
+        if (contains(hi)) {
             return rank(hi) - rank(lo) + 1;
         } else {
             return rank(hi) - rank(lo);
         }
     }
-    
-    public int height(){
+
+    public int height() {
         return height(root);
     }
-    
-    private int height(Node x){
-        if (x == null){
+
+    private int height(Node x) {
+        if (x == null) {
             return -1;
         }
-        
+
         return 1 + Math.max(height(x.left), height(x.right));
     }
-    
-    public Iterable<Key> levelOrder(){
+
+    public Iterable<Key> levelOrder() {
         Queue<Key> keys = new Queue<>();
         Queue<Node> queue = new Queue<>();
         queue.enqueue(root);
-        while(!queue.isEmpty()){
+        while (!queue.isEmpty()) {
             Node x = queue.dequeue();
-            if (x == null){
-                continue; 
+            if (x == null) {
+                continue;
             }
             keys.enqueue(x.key);
             queue.enqueue(x.left);
             queue.enqueue(x.right);
         }
-        
+
         return keys;
     }
-    
+
     /**
      * ***********************************************************************
      * Check integrity of BST data structure.
@@ -424,8 +435,8 @@ public class BSTNoExceptions<Key extends Comparable<Key>, Value> {
         return true;
     }
 
-     public static void main(String[] args) {
-        BSTPractice<String, Integer> bst = new BSTPractice<>();
+    public static void main(String[] args) {
+        BSTNoExceptions<String, Integer> bst = new BSTNoExceptions<>();
         System.out.println(bst.isEmpty()); // true
         bst.put("S", 1);
         bst.put("E", 2);

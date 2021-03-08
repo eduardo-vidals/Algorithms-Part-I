@@ -233,7 +233,8 @@ public class BSTPractice<Key extends Comparable<Key>, Value> {
 
         if (cmp == 0) {
             return x;
-        } else if (cmp < 0) {
+        }
+        if (cmp < 0) {
             return floor(x.left, key);
         }
 

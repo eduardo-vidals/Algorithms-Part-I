@@ -198,7 +198,8 @@ public class BSTNoExceptionsPractice<Key extends Comparable<Key>, Value> {
 
         if (cmp == 0) {
             return x;
-        } else if (cmp < 0) {
+        }
+        if (cmp < 0) {
             return floor(x.left, key);
         }
 
@@ -255,9 +256,9 @@ public class BSTNoExceptionsPractice<Key extends Comparable<Key>, Value> {
 
         int leftSize = size(x.left);
 
-        if (leftSize < rank) {
+        if (leftSize > rank) {
             return select(x.left, rank);
-        } else if (leftSize > rank) {
+        } else if (leftSize < rank) {
             return select(x.right, rank - leftSize - 1);
         } else {
             return x.key;
@@ -427,7 +428,7 @@ public class BSTNoExceptionsPractice<Key extends Comparable<Key>, Value> {
     }
 
     public static void main(String[] args) {
-        BSTPractice<String, Integer> bst = new BSTPractice<>();
+        BSTNoExceptionsPractice<String, Integer> bst = new BSTNoExceptionsPractice<>();
         System.out.println(bst.isEmpty()); // true
         bst.put("S", 1);
         bst.put("E", 2);

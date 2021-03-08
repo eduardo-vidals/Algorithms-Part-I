@@ -1,3 +1,3 @@
 # Binary Search Trees
-Includes an implementation of: 
+Includes implementations of the following: 
 <ul><li>Binary Search Tree</li><li>Red-Black Binary Search Tree</li> </ul>

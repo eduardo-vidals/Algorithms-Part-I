@@ -25,15 +25,18 @@ public class LinkedListPractice<Item> implements Iterable<Item> {
         Item data;
     }
 
-    private boolean isEmpty() {
+    public boolean isEmpty() {
         return n == 0;
     }
 
-    private int size() {
+    public int size() {
         return n;
     }
 
     public void push(Item data) {
+        if (data == null) {
+            throw new IllegalArgumentException();
+        }
         Node oldTail = tail;
         tail = new Node();
         tail.data = data;
@@ -48,6 +51,9 @@ public class LinkedListPractice<Item> implements Iterable<Item> {
     }
 
     public Item pop() {
+        if (isEmpty()) {
+            throw new NoSuchElementException();
+        }
         Node oldTail = tail;
 
         if (size() >= 1) {
@@ -57,34 +63,34 @@ public class LinkedListPractice<Item> implements Iterable<Item> {
             tail = null;
             head = null;
         }
-        
+
         n--;
         return oldTail.data;
     }
-    
-    public void reverseLinkedList(){
+
+    public void reverseLinkedList() {
         Node next = null;
         Node current = null;
-        
-        while (head != null){
+
+        while (head != null) {
             next = head.next;
             head.next = current;
             head.prev = next;
             current = head;
             head = next;
         }
-        
-        head = current;  
+
+        head = current;
     }
-    
+
     @Override
-    public String toString(){
+    public String toString() {
         StringBuilder sb = new StringBuilder();
-        
-        for (Item data : this){
+
+        for (Item data : this) {
             sb.append(data).append(" ");
         }
-        
+
         return sb.toString();
     }
 
@@ -92,10 +98,11 @@ public class LinkedListPractice<Item> implements Iterable<Item> {
     public Iterator<Item> iterator() {
         return new LinkedIterator();
     }
-    
+
     private class LinkedIterator implements Iterator<Item> {
+
         Node current = head;
-        
+
         @Override
         public boolean hasNext() {
             return current != null;
@@ -103,15 +110,15 @@ public class LinkedListPractice<Item> implements Iterable<Item> {
 
         @Override
         public Item next() {
-            if (isEmpty()){
+            if (isEmpty()) {
                 throw new NoSuchElementException();
             }
-            
+
             Item item = current.data;
             current = current.next;
             return item;
         }
-        
+
     }
 
     public static void main(String[] args) {

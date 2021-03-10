@@ -18,8 +18,8 @@ public class LinkedList<Item> implements Iterable<Item> {
     int n;
 
     private class Node {
-        Node prev;
         Node next;
+        Node prev;
         Item data;
     }
 
@@ -46,9 +46,7 @@ public class LinkedList<Item> implements Iterable<Item> {
         } else {
             oldTail.next = tail;
         }
-
         n++;
-
     }
 
     public Item pop() {
@@ -58,45 +56,42 @@ public class LinkedList<Item> implements Iterable<Item> {
 
         Node oldTail = tail;
 
-        if (size() > 1) {
-            tail = tail.next;
+        if (size() >= 1) {
+            tail = tail.prev;
             tail.next = null;
         } else {
             tail = null;
             head = null;
         }
+
         n--;
         return oldTail.data;
-
     }
 
     public void reverseLinkedList() {
-
         Node next = null;
-        Node prev = null;
+        Node current = null;
 
         while (head != null) {
             next = head.next;
-            head.next = prev;
+            head.next = current;
             head.prev = next;
-            prev = head;
+            current = head;
             head = next;
         }
 
-        head = prev;
-
+        head = current;
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        for (Item item : this) {
-            sb.append(item);
+        for (Item data : this) {
+            sb.append(data).append(" ");
         }
 
         return sb.toString();
-
     }
 
     @Override
@@ -115,15 +110,13 @@ public class LinkedList<Item> implements Iterable<Item> {
 
         @Override
         public Item next() {
-
-            if (!hasNext()) {
+            if (isEmpty()) {
                 throw new NoSuchElementException();
             }
 
             Item item = current.data;
             current = current.next;
             return item;
-
         }
 
     }
@@ -134,11 +127,12 @@ public class LinkedList<Item> implements Iterable<Item> {
         s.push(4);
         s.push(5);
         s.push(6);
+        s.pop();
 
         System.out.println(s);
         s.reverseLinkedList();
         System.out.println(s);
-        System.out.println(s.head.next.next.next.prev.data);
+        System.out.println(s.head.next.prev.data);
 
     }
 

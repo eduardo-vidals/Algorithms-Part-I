@@ -8,9 +8,7 @@ package computerscience.algorithms.week5.kdtrees;
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.Queue;
 import edu.princeton.cs.algs4.RectHV;
-import edu.princeton.cs.algs4.Stack;
 import edu.princeton.cs.algs4.StdDraw;
-import java.util.SortedSet;
 import java.util.TreeSet;
 
 /**
@@ -19,7 +17,7 @@ import java.util.TreeSet;
  */
 public class PointSET {
 
-    TreeSet<Point2D> tree;
+    private TreeSet<Point2D> tree;
 
     public PointSET() {
         tree = new TreeSet<>();
@@ -66,7 +64,7 @@ public class PointSET {
         }
         Point2D closestPoint = null;
         for (Point2D point : tree) {
-            if (closestPoint == null || point.distanceTo(p) < closestPoint.distanceTo(p)) {
+            if (closestPoint == null || point.distanceSquaredTo(p) < closestPoint.distanceSquaredTo(p)) {
                 closestPoint = point;
             }
         }

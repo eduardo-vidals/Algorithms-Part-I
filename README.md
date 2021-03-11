@@ -5,7 +5,7 @@ Part I of Algorithms from Princeton University. Course related information can b
 https://www.coursera.org/learn/algorithms-part1
 
 
-| Sections | Content |
+| Week | Content |
 | --- | --- |
 | Week 1 | Union-Find, Analysis of Algorithms |
 | Week 2 | Linked List, Resizing Arrays, Stacks, Queues, Generics, Iterators, Deque, Elementary Sorts |

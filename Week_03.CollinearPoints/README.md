@@ -8,4 +8,4 @@ Computer vision involves analyzing patterns in visual images and reconstructing 
 Given a set of n distinct points in the plane, find every (maximal) line segment that connects a subset of 4 or more of the points.
 
 ## Specification
-Programming assignment specification can be found [here.](https://coursera.cs.princeton.edu/algs4/assignments/percolation/specification.php)
+Programming assignment specification can be found [here.](https://coursera.cs.princeton.edu/algs4/assignments/collinear/specification.php)

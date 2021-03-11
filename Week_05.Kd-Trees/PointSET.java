@@ -1,9 +1,10 @@
+package computerscience.algorithms.week5.kdtrees;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package computerscience.algorithms.week5.kdtrees;
 
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.Queue;
@@ -32,10 +33,17 @@ public class PointSET {
     }
 
     public void insert(Point2D p) {
+        if (p == null) {
+            throw new IllegalArgumentException();
+        }
+
         tree.add(p);
     }
 
     public boolean contains(Point2D p) {
+        if (p == null) {
+            throw new IllegalArgumentException();
+        }
         return tree.contains(p);
     }
 
@@ -47,6 +55,10 @@ public class PointSET {
     }
 
     public Iterable<Point2D> range(RectHV rect) {
+        if (rect == null) {
+            throw new IllegalArgumentException();
+        }
+
         Queue<Point2D> queue = new Queue<>();
 
         for (Point2D point : tree) {
@@ -59,6 +71,10 @@ public class PointSET {
     }
 
     public Point2D nearest(Point2D p) {
+        if (p == null) {
+            throw new IllegalArgumentException();
+        }
+
         if (isEmpty()) {
             return null;
         }

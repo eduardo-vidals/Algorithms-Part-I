@@ -58,7 +58,7 @@ public class KdTree {
 
         // input node
         Node inputNode = new Node(p, rect);
-        
+
         // our new root
         root = insert(root, inputNode, 0, 0, 1, 1, true);
     }
@@ -77,7 +77,7 @@ public class KdTree {
         if (level) {
             // if input node x value is less than the parent node, then insert 
             // it to the left, else insert it to the right
-            
+
             // if inserted to the left, the rectangle should have a xmax of
             // the parent node, if inserted to the right, the rectangle should
             // have a xmin of the parent node
@@ -89,7 +89,7 @@ public class KdTree {
         } else {
             // if input node y value is less than the parent node, then insert 
             // it to the the bottom, else insert it to the top
-            
+
             // if inserted to the bottom, the rectangle should have a ymax of
             // the parent node, if inserted to the right, the rectangle should
             // have a ymin of the parent node
@@ -118,7 +118,7 @@ public class KdTree {
         } else if (x.p.equals(p)) {
             return true;
         }
-        
+
         // use the same method for adding except this time we are searching
         // for the node that has the point
         if (level) {
@@ -136,10 +136,12 @@ public class KdTree {
         }
     }
 
+    // draw all points to standard draw 
     public void draw() {
         draw(root, true);
     }
-
+    
+    // recursively draw the left side and then the right side
     private void draw(Node x, boolean level) {
         if (x == null) {
             return;
@@ -161,6 +163,7 @@ public class KdTree {
         draw(x.rt, !level);
     }
 
+    // all points that are inside the rectangle (or on the boundary) 
     public Iterable<Point2D> range(RectHV rect) {
         if (rect == null) {
             throw new IllegalArgumentException();
@@ -184,6 +187,9 @@ public class KdTree {
             return;
         }
 
+        // if the rectangles intersect, then there might be a point within that
+        // range, if the rectangle contains the node point, then add it to
+        // the queue
         if (rect.contains(x.p)) {
             queue.enqueue(x.p);
         }
@@ -192,6 +198,7 @@ public class KdTree {
 
     }
 
+    // a nearest neighbor in the set to point p; null if the set is empty 
     public Point2D nearest(Point2D p) {
         if (p == null) {
             throw new IllegalArgumentException();
@@ -209,26 +216,40 @@ public class KdTree {
     }
 
     private Point2D nearest(Node x, Point2D p, Point2D min) {
+        // if the node is null, return the existing min value
         if (x == null) {
             return min;
         }
 
+        // return the min if the distance is shorter than the distance of
+        // the node rectangle
         if (p.distanceSquaredTo(min) < x.rect.distanceSquaredTo(p)) {
             return min;
         }
 
+        // if the current node point is closer, then update the min value
         if (x.p.distanceSquaredTo(p) < min.distanceSquaredTo(p)) {
             min = x.p;
         }
 
+        // if the left/bottom side is null, then check the right side
         if (x.lb == null) {
             return nearest(x.rt, p, min);
-        } else if (x.rt == null) {
+        } // if the right/top side is null, then check the left side
+        else if (x.rt == null) {
             return nearest(x.lb, p, min);
-        } else if (x.lb.rect.distanceSquaredTo(p) < x.rt.rect.distanceSquaredTo(p)) {
+        } // if the left/bottom subtree has a closer point than the right/top
+        // subtree, then there is no need to into the right/top subtree.
+        // as a result, if we find a new min value, then we assign it the new
+        // min value and prune the right/top sub-tree
+        else if (x.lb.rect.distanceSquaredTo(p) < x.rt.rect.distanceSquaredTo(p)) {
             min = nearest(x.lb, p, min);
             return nearest(x.rt, p, min);
-        } else {
+        } // if the right/top subtree has a closer point than the left/bottom
+        // subtree, then there is no need to into the left/bottom subtree.
+        // as a result, if we find a new min value, then we assign it the new
+        // min value and prune the left/bottom sub-tree
+        else {
             min = nearest(x.rt, p, min);
             return nearest(x.lb, p, min);
         }

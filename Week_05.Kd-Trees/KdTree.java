@@ -140,7 +140,7 @@ public class KdTree {
     public void draw() {
         draw(root, true);
     }
-    
+
     // recursively draw the left side and then the right side
     private void draw(Node x, boolean level) {
         if (x == null) {
@@ -240,15 +240,15 @@ public class KdTree {
             return nearest(x.lb, p, min);
         } // if the left/bottom subtree has a closer point than the right/top
         // subtree, then there is no need to into the right/top subtree.
-        // as a result, if we find a new min value, then we assign it the new
-        // min value and prune the right/top sub-tree
+        // as a result, if we find a new min value, then we assign it the as 
+        // the min value and prune the right/top sub-tree
         else if (x.lb.rect.distanceSquaredTo(p) < x.rt.rect.distanceSquaredTo(p)) {
             min = nearest(x.lb, p, min);
             return nearest(x.rt, p, min);
         } // if the right/top subtree has a closer point than the left/bottom
         // subtree, then there is no need to into the left/bottom subtree.
-        // as a result, if we find a new min value, then we assign it the new
-        // min value and prune the left/bottom sub-tree
+        // as a result, if we find a new min value, then we assign it the as 
+        // the min value and prune the left/bottom sub-tree
         else {
             min = nearest(x.rt, p, min);
             return nearest(x.lb, p, min);

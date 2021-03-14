@@ -77,7 +77,6 @@ public class KdTree {
         if (level) {
             // if input node x value is less than the parent node, then insert 
             // it to the left, else insert it to the right
-
             // if inserted to the left, the rectangle should have a xmax of
             // the parent node, if inserted to the right, the rectangle should
             // have a xmin of the parent node
@@ -89,7 +88,6 @@ public class KdTree {
         } else {
             // if input node y value is less than the parent node, then insert 
             // it to the the bottom, else insert it to the top
-
             // if inserted to the bottom, the rectangle should have a ymax of
             // the parent node, if inserted to the right, the rectangle should
             // have a ymin of the parent node
@@ -241,14 +239,14 @@ public class KdTree {
         } // if the left/bottom subtree has a closer point than the right/top
         // subtree, then there is no need to into the right/top subtree.
         // as a result, if we find a new min value, then we assign it the as 
-        // the min value and prune the right/top sub-tree
+        // the new min value and prune the right/top sub-tree
         else if (x.lb.rect.distanceSquaredTo(p) < x.rt.rect.distanceSquaredTo(p)) {
             min = nearest(x.lb, p, min);
             return nearest(x.rt, p, min);
         } // if the right/top subtree has a closer point than the left/bottom
         // subtree, then there is no need to into the left/bottom subtree.
         // as a result, if we find a new min value, then we assign it the as 
-        // the min value and prune the left/bottom sub-tree
+        // the new min value and prune the left/bottom sub-tree
         else {
             min = nearest(x.rt, p, min);
             return nearest(x.lb, p, min);

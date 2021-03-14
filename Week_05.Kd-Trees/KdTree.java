@@ -15,12 +15,10 @@ import edu.princeton.cs.algs4.StdDraw;
  * @author Eduardo
  */
 public class KdTree {
-
     private Node root;
     private int n;
 
     private static class Node {
-
         private Point2D p;
         private RectHV rect;
         private Node lb;

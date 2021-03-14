@@ -1,5 +1,5 @@
 # Kd-Trees
-This is my solution to the Kd-Trees assignment
+This is my solution to the Kd-Trees assignment.
 
 ## Summary
 2D-trees have numerous applications, ranging from classifying astronomical objects to computer animation to speeding up neural networks to mining data to image retrieval.

@@ -1,5 +1,5 @@
 # Queues
-This is my solution to the Queues assignment.
+Solution to the Queues assignment.
 
 ## Summary
 The goal of this assignment is to implement elementary data structures using arrays and linked lists, and to introduce generics and iterators.
